@@ -96,6 +96,8 @@ samples = colnames(data)[-1]
 samples.site = substr(samples,1,9)
 unique.sites = unique(samples.site) 
 
+pdf(paste(out.dir,"ECA_MCD_UPGMA_All_Sites.pdf", sep = ""))
+
 for (i in unique.sites) {
   
   dat.temp = data[,grep(pattern = i,x = colnames(data))]
@@ -119,11 +121,14 @@ for (i in unique.sites) {
   tree = as.phylo(hclust(vegdist(Mol.Info, "euclidean"), "average")) # Converting the distance matrix into a tree
 
   # Quick visualization of the dendrogram
-  pdf(paste(out.dir,i, "_MCD_UPGMA.pdf", sep = ""))
-    plot.phylo(tree,type = "fan",show.tip.label = F,show.node.label = F); mtext(text = i,side = 3)
-  dev.off()
-  
+  plot.phylo(tree,type = "fan",show.tip.label = F,show.node.label = F); mtext(text = i,side = 3)
+ 
   # Writing tre
   write.tree(tree, paste(out.dir,i, "_MCD_UPGMA.tre", sep = ""))
+  
+  # Writing dat.temp
+  write.csv(dat.temp,paste(out.dir,i, "_FTICR_Data.csv", sep = ""),quote = F,row.names = T)
 
 }
+
+dev.off()
