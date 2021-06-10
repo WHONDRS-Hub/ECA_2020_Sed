@@ -9,6 +9,7 @@ options(digits = 10)
 require(phangorn) # For tree based functions
 #require(ggtree) # For tree visualization
 require(vegan) # For vegdist
+require(picante)
 
 #### function to turn factors to character
 
@@ -105,6 +106,7 @@ for (i in unique.sites) {
   dat.temp = dat.temp[-which(rownames(dat.temp) %in% zero.spp.temp),]
   
   mol.temp = mol[which(rownames(mol) %in% rownames(dat.temp)),] # this only includes peaks that are present in samples in the site of interest
+  dat.temp = dat.temp[which(rownames(dat.temp) %in% rownames(mol.temp)),]
   
   # Setting objects for useful parameters
   Mol.Info = mol.temp[,c("C", "H", "O", "N", "S", "P", "DBE", "AI_Mod", "kdefect.CH2"), drop = F]
@@ -120,6 +122,9 @@ for (i in unique.sites) {
   # Create tree
   tree = as.phylo(hclust(vegdist(Mol.Info, "euclidean"), "average")) # Converting the distance matrix into a tree
 
+  # check to make sure dendrogram and data align. If anything prints indicating tips being dropped, something went wrong
+  phylo.temp = match.phylo.data(tree, dat.temp)
+  
   # Quick visualization of the dendrogram
   plot.phylo(tree,type = "fan",show.tip.label = F,show.node.label = F); mtext(text = i,side = 3)
  
@@ -128,6 +133,8 @@ for (i in unique.sites) {
   
   # Writing dat.temp
   write.csv(dat.temp,paste(out.dir,i, "_FTICR_Data.csv", sep = ""),quote = F,row.names = T)
+  
+  rm('dat.temp','mol.temp','Mol.Info','tree','phylo.temp','Mol.Ratio','zero.spp.temp')
 
 }
 
