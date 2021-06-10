@@ -7,7 +7,7 @@
 
 rm(list=ls());graphics.off()
 
-range = 1:9 # number of randomizations
+range = 1:50 # number of randomizations
 Sample_Name = "Dataset_Name"
 tree_type = "MCD" # MCD or TW or TWCD
 
@@ -27,40 +27,41 @@ unique.sites = substr(list.files(path = in.dir,pattern = "Data.csv"),start = 1,s
 
 for (curr.site in unique.sites) {
 
-data = read.csv(paste0(in.dir,curr.site,"_FTICR_Data.csv"), row.names = 1) # Importing the site level data  
-tree = read.tree(paste0(in.dir,curr.site,"_MCD_UPGMA.tre")) # Importing the site specific dendrogram
+  data = read.csv(paste0(in.dir,curr.site,"_FTICR_Data.csv"), row.names = 1) # Importing the site level data  
+  tree = read.tree(paste0(in.dir,curr.site,"_MCD_UPGMA.tre")) # Importing the site specific dendrogram
 
-# Creating necessary directories
+  # Creating necessary directories
 
-if(!dir.exists(paste0(out.dir,curr.site,"_",tree_type, "_Null_Results"))){
-  dir.create(paste0(out.dir,curr.site,"_",tree_type, "_Null_Results"))
-}
+  if(!dir.exists(paste0(out.dir,curr.site,"_",tree_type, "_Null_Results"))){
+    dir.create(paste0(out.dir,curr.site,"_",tree_type, "_Null_Results"))
+  }
 
 
-####################################
-#### Beginning the bNTI Process ####
-####################################
+  ####################################
+  #### Beginning the bNTI Process ####
+  ####################################
 
-# Converting to presence/absence
-data[data>1] = 1
+  # Converting to presence/absence
+  data[data>1] = 1
 
-# Matching the tree to the newly rarefied OTU dataset
-phylo = match.phylo.data(tree, data)
+  # Matching the tree to the newly rarefied OTU dataset
+  # Any dropped tips indicate an error that needs to be fixed
+  phylo = match.phylo.data(tree, data)
 
-# Running cophenetic outside of the for-loop
-coph = cophenetic(phylo$phy)
+  # Running cophenetic outside of the for-loop
+  coph = cophenetic(phylo$phy)
 
-# Calculating the bMNTD for 999 random distributions
-print(paste(date(), " - Start for loop"))
+  # Calculating the bMNTD for the number of requested random distributions
+  print(paste(date(), " - Start for loop"))
 
-for(i in range){
-  bMNTD.rand = as.matrix(comdistnt(t(phylo$data), taxaShuffle(coph), abundance.weighted = F, exclude.conspecifics = F))
-  write.csv(bMNTD.rand, paste(tree_type, "_Null_Results/FTICR_", Sample_Name, "_", tree_type, "_bMNTD_rep", i, ".csv", sep = ""), quote = F)
-  rm("bMNTD.rand")
+  for(i in range){
+    bMNTD.rand = as.matrix(comdistnt(t(phylo$data), taxaShuffle(coph), abundance.weighted = F, exclude.conspecifics = F))
+    write.csv(bMNTD.rand, paste(out.dir,curr.site,"_",tree_type, "_Null_Results/FTICR_",curr.site, "_", tree_type, "_bMNTD_rep", i, ".csv", sep = ""), quote = F)
+    rm("bMNTD.rand")
   
-  print(c(date(),i))
-} # Performing the calculations on using the OTU table but with randomized taxonomic affiliations
+    print(c(curr.site,date(),i))
+  } # Performing the calculations using the data table but with randomized positions across the dendrogram
 
-print(paste(date(), " - End for loop"))
+  print(paste(date(), " - End for loop"))
 
 }
