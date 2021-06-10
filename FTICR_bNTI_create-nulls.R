@@ -3,11 +3,13 @@
 
 # Modified from https://github.com/stegen/Stegen_etal_ISME_2013/blob/master/bNTI_Local_Machine.r; Stegen et al, 2013
 # Modified from https://github.com/stegen/Stegen_etal_ISME_2013/blob/master/Raup_Crick_Abundance.r; Stegen et al, 2013
+# # JCS 2020: James.Stegen@pnnl.gov modified from https://github.com/danczakre/Meta-Metabolome_Ecology/blob/master/FTICR_bNTI_create-nulls.R; Danczak et al. 2020
 
+rm(list=ls());graphics.off()
 
-range = 1:999
+range = 1:9 # number of randomizations
 Sample_Name = "Dataset_Name"
-tree_type = "Tree_Type"
+tree_type = "MCD" # MCD or TW or TWCD
 
 #-----------------#
 
@@ -18,14 +20,20 @@ library(picante)
 #### Data Loading and cleaning ####
 ###################################
 
-setwd("/path/to/ICR_data") # Working directory for FT-ICR data
-data = read.csv("Processed_Data.csv", row.names = 1) # Importing the organismal data  
-tree = read.tree("Metabolite_Dendrogram.tre") # Importing the tree
+in.dir =  "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Dendrograms/"
+out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Randomizations/"
+
+unique.sites = substr(list.files(path = in.dir,pattern = "Data.csv"),start = 1,stop = 9)
+
+for (curr.site in unique.sites) {
+
+data = read.csv(paste0(in.dir,curr.site,"_FTICR_Data.csv"), row.names = 1) # Importing the site level data  
+tree = read.tree(paste0(in.dir,curr.site,"_MCD_UPGMA.tre")) # Importing the site specific dendrogram
 
 # Creating necessary directories
 
-if(!dir.exists(paste0(tree.type, "_Null_Results"))){
-  dir.create(paste0(tree.type, "_Null_Results"))
+if(!dir.exists(paste0(out.dir,curr.site,"_",tree_type, "_Null_Results"))){
+  dir.create(paste0(out.dir,curr.site,"_",tree_type, "_Null_Results"))
 }
 
 
@@ -54,3 +62,5 @@ for(i in range){
 } # Performing the calculations on using the OTU table but with randomized taxonomic affiliations
 
 print(paste(date(), " - End for loop"))
+
+}
