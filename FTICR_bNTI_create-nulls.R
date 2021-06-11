@@ -24,6 +24,7 @@ in.dir =  "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Mode
 out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Randomizations/"
 
 unique.sites = substr(list.files(path = in.dir,pattern = "Data.csv"),start = 1,stop = 9)
+unique.sites = unique.sites[-grep(pattern = "_DI_",x = unique.sites)]
 
 for (curr.site in unique.sites) {
 
