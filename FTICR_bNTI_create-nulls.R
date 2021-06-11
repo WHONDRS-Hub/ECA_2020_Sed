@@ -7,7 +7,8 @@
 
 rm(list=ls());graphics.off()
 
-range = 1:50 # number of randomizations
+use.local = T # switch to use local or share drive. T indicates using local
+range = 51:400 # number of randomizations
 Sample_Name = "Dataset_Name"
 tree_type = "MCD" # MCD or TW or TWCD
 
@@ -20,8 +21,17 @@ library(picante)
 #### Data Loading and cleaning ####
 ###################################
 
-in.dir =  "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Dendrograms/"
-out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Randomizations/"
+if (use.local == T) {
+  
+  in.dir = "C:/Users/steg815/OneDrive - PNNL/Desktop/Temp_bNTI/MCD_Dendrograms/"
+  out.dir = "C:/Users/steg815/OneDrive - PNNL/Desktop/Temp_bNTI/MCD_Randomizations/"
+  
+} else {
+  
+  in.dir =  "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Dendrograms/"
+  out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Randomizations/"
+
+}
 
 unique.sites = substr(list.files(path = in.dir,pattern = "Data.csv"),start = 1,stop = 9)
 unique.sites = unique.sites[-grep(pattern = "_DI_",x = unique.sites)]
