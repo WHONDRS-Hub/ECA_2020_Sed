@@ -120,6 +120,9 @@ for (i in unique.sites) {
 }
 
 beta.disp.use = samples.per.site[which(x = samples.per.site$Num.of.Samples == 10),]
+
+write.csv(beta.disp.use,paste0(out.dir,"ECA_BetaDisp_10_Samp_Only.csv"),quote = F,row.names = F)
+
 sites.to.use = c( # these are the 4 sites to use, selected to evenly span the range of betadisp
 beta.disp.use$Site[which.min(beta.disp.use$betadisp)],
 beta.disp.use$Site[which.max(beta.disp.use$betadisp)],
