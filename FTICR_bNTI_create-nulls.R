@@ -8,7 +8,7 @@
 rm(list=ls());graphics.off()
 
 use.local = T # switch to use local or share drive. T indicates using local
-range = 51:400 # number of randomizations
+range = 401:999 # number of randomizations
 Sample_Name = "Dataset_Name"
 tree_type = "MCD" # MCD or TW or TWCD
 
