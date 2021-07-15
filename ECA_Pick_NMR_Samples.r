@@ -55,63 +55,85 @@ moist.sum$Mean_Dry_Moist = as.numeric(as.character(moist.sum$Mean_Dry_Moist))
 str(moist.sum)
 
 # merge everything
-merged.data = merge(bnti,texture,by = 'Site')
-merged.data = merge(merged.data,npoc,by = 'Site')
-merged.data = merge(merged.data,beta.disp,by = 'Site')
-merged.data = merge(merged.data,moist.sum,by = 'Site')
+merged.data = merge(bnti,texture,by = 'Site',all = T)
+merged.data = merge(merged.data,npoc,by = 'Site',all = T)
+merged.data = merge(merged.data,beta.disp,by = 'Site',all = T)
+merged.data = merge(merged.data,moist.sum,by = 'Site',all = T)
 dim(merged.data)
 
-## merge bnti with only moisture to maximize number of sites
-bnti.moist = merge(x = bnti,y = moist.sum,by = 'Site'); dim(bnti.moist)
-plot(bnti.moist$Median_bNTI ~ bnti.moist$Med_Dry_Moist)
-summary(lm(bnti.moist$Median_bNTI ~ bnti.moist$Med_Dry_Moist))
-plot(bnti.moist$Median_bNTI ~ bnti.moist$Med_Wet_Moist)
-plot((bnti.moist$Mean_bNTI) ~ (bnti.moist$Med_Dry_Moist))
-plot((bnti.moist$SD_bNTI) ~ (bnti.moist$Mean_Dry_Moist))
-plot((bnti.moist$Min_bNTI) ~ (bnti.moist$Mean_Dry_Moist))
-plot((bnti.moist$Max_bNTI) ~ (bnti.moist$Mean_Dry_Moist))
-plot((bnti.moist$SD_bNTI) ~ (bnti.moist$Med_Dry_Moist))
+## merge bnti with only moisture to maximize number of sites, but need at least 8 samples to stay
+bnti.moist = merge(x = bnti,y = moist.sum,by = 'Site'); 
+bnti.moist = bnti.moist[which(bnti.moist$Sample_Number >=8),]
+dim(bnti.moist)
 
 # start trying constraint based regression
 !! need to run through a loop of different number of break points and record the p.val and r.sq for each and make a plot of those parameters vs. number of break points
-step.size = (max(bnti.moist$Med_Dry_Moist) - min(bnti.moist$Med_Dry_Moist))/10
+num.of.breaks = 10
+step.size = (max(bnti.moist$Med_Dry_Moist) - min(bnti.moist$Med_Dry_Moist))/num.of.breaks
 start.val = min(bnti.moist$Med_Dry_Moist)
 end.val = start.val + step.size
 parsed.bnti = numeric()
 
-for (i in 1:11) {
+for (i in 1:(num.of.breaks + 1)) {
   
   bnti.temp = bnti.moist[which(bnti.moist$Med_Dry_Moist >= start.val & bnti.moist$Med_Dry_Moist < end.val),]
   if(nrow(bnti.temp) > 1) {
     max.val = max(bnti.temp$Median_bNTI)
     moist.val = bnti.temp$Med_Dry_Moist[which.max(bnti.temp$Median_bNTI)]
+    site.temp = bnti.temp$Site[which.max(bnti.temp$Median_bNTI)]
   }
   
   if(nrow(bnti.temp) == 1) {
     max.val = bnti.temp$Median_bNTI
     moist.val = bnti.temp$Med_Dry_Moist
+    site.temp = bnti.temp$Site
   }
   
   if(nrow(bnti.temp) == 0) {
     max.val = NA
     moist.val = NA
+    site.temp = NA
   }
   
-  parsed.bnti = rbind(parsed.bnti,c(max.val,moist.val))
+  parsed.bnti = rbind(parsed.bnti,c(site.temp,max.val,moist.val))
   
   start.val = end.val
   end.val = start.val + step.size
   
 }
-colnames(parsed.bnti) = c("max.bnti","dry.moisture")
+colnames(parsed.bnti) = c("Site","max.bnti","dry.moisture")
 parsed.bnti = as.data.frame(parsed.bnti)
+parsed.bnti$Site = as.character(parsed.bnti$Site)
+parsed.bnti$max.bnti = as.numeric(as.character(parsed.bnti$max.bnti))
+parsed.bnti$dry.moisture = as.numeric(as.character(parsed.bnti$dry.moisture))
 parsed.bnti = parsed.bnti[-which(is.na(parsed.bnti$max.bnti)),]
+dim(parsed.bnti)
 
-plot((bnti.moist$Median_bNTI) ~ (bnti.moist$Med_Dry_Moist))
+pdf(paste(out.dir,"MCD_Med_bNTI_v_Dry_Moisture.pdf",sep=""))
+par(pty="s")
+plot((bnti.moist$Median_bNTI) ~ (bnti.moist$Med_Dry_Moist),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per dry mass)",cex.lab=2,cex.axis=1.5)
 mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$dry.moisture
 points(mod.to.plot,pch=19,col=4)
 mod = summary(lm(mod.to.plot))
-abline(mod,lwd=2,col=4)
+#abline(mod,lwd=2,col=4)
+
+# using above plot to select samples
+nmr.sites = c("ECA2_0055","ECA2_0041","ECA2_0017","ECA2_0005","ECA2_0009") # these fit a good regression of bNTI vs. moisture
+nmr.dat = merged.data[which(merged.data$Site %in% nmr.sites),] # they all have high NPOC and have 10 samples
+nmr.plot = parsed.bnti[which(parsed.bnti$Site %in% nmr.sites),]
+points(nmr.plot$max.bnti ~ nmr.plot$dry.moisture,col=2,cex=1.5)
+
+gc.dat = merged.data[which(merged.data$Site %in% parsed.bnti$Site),] # same sites for metaT
+dim(gc.dat)
+sum(gc.dat$Sample_Number)
+
+metaP.sites = c("ECA2_0055","ECA2_0009")
+metaP.plot = parsed.bnti[which(parsed.bnti$Site %in% metaP.sites),]
+points(metaP.plot$max.bnti ~ metaP.plot$dry.moisture,col=3,cex=2,pch=2)
+
+legend(x = 200,y = 34.5,legend = c("GC-MS and metaT","NMR","metaP"),col = c(4,2,3),pch = c(19,1,2),cex = 1.5,bty = "n")
+
+dev.off()
 
 # make bnti histogram
 pdf("//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_bNTI_Outcomes/bNTI_MCD_Histogram.pdf")
