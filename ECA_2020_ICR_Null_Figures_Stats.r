@@ -4,13 +4,11 @@ min.num.samples = 10
 
 out.dir = "//PNL/Projects/ECA_Project/ECA_Manuscripts/OM_Null_Modeling/"
 
-# read in bNTI for each site to make site level bNTI histograms and the aggregate bNTI histogram
-# put the aggregate as density function line on each site level plot, including the supplemental and the two for the main ms
-# use site 0009 as the min bNTI and site 0055 as the max bNTI site
-
 bnti.in.path = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_bNTI_Outcomes/"
 
 bnti.files = list.files(path = bnti.in.path,pattern = "MCD_bNTI_999")
+
+# compile bnti values across all sites to enable a density function
 
 bnti.comp = numeric()
 
@@ -30,7 +28,65 @@ for (i in bnti.files) {
   
 }
 
-!!!! next step is to make aggregate histogram of all bnti and then within site histograms for each site, with aggregate layered on a density line
+bnti.comp.den = density(x = bnti.comp)
+
+# make one histogram for each site with the among site compiliation overlaid
+
+pdf(paste0(out.dir,"All_Sites_bNTI_Hists.pdf"),width=8)
+
+for (i in bnti.files) {
+  
+  bnti.temp = read.csv(file = paste0(bnti.in.path,i),row.names = 1) 
+  
+  if (nrow(bnti.temp) >= min.num.samples) {
+    
+    par(pty="s")
+    hist(as.numeric(as.vector(as.dist(bnti.temp))),xlim=c(-2.5,max(bnti.comp)),cex.lab=2,cex.axis=1.5,main=paste0("Site ",substr(x = i,start = 8,stop = 9)),xlab=expression(paste(beta,"NTI")),ylab="Within-Site Observations")
+    abline(v=c(-2,2),col=2,lty=2,lwd=2)
+    par(new = TRUE) 
+    plot(bnti.comp.den,axes=F,lwd=2,col=4,xlab="",ylab="",main="")
+    box()
+    axis(side = 4, at = pretty(range(bnti.comp.den$y)),cex.axis=1.5)      # Add second axis
+    mtext("Among Site Density", side = 4, line = 3,cex=2) 
+    
+  } 
+  
+}
+
+dev.off()
+
+# make a plot with two panels for the main ms. 
+# each panel has a histogram for the site with minimum bnti and maximum bnit (9 and 55)
+# label a and b
+# overlay the among site density
+
+pdf(paste0(out.dir,"Main_Min_Max_Hists.pdf"),width=15)
+par(mfrow=c(1,2),pty="s")
+panel.label = "a "
+
+for (i in bnti.files) {
+  
+  bnti.temp = read.csv(file = paste0(bnti.in.path,i),row.names = 1) 
+  
+  if (nrow(bnti.temp) >= min.num.samples & substr(x = i,start = 8,stop = 9) %in% c('09','55')) {
+    
+    hist(as.numeric(as.vector(as.dist(bnti.temp))),xlim=c(-2.5,max(bnti.comp)),cex.lab=2,cex.axis=1.5,main="",xlab=expression(paste(beta,"NTI")),ylab="Within-Site Observations")
+    abline(v=c(-2,2),col=2,lty=2,lwd=2)
+    par(new = TRUE) 
+    plot(bnti.comp.den,axes=F,lwd=2,col=4,xlab="",ylab="",main="")
+    box()
+    axis(side = 4, at = pretty(range(bnti.comp.den$y)),cex.axis=1.5)      # Add second axis
+    mtext("Among Site Density", side = 4, line = 3,cex=2) 
+    mtext(text = panel.label,side = 3,line = -1.5,adj = 1,cex=2)
+    
+    panel.label = "b "
+    
+  } 
+  
+}
+
+dev.off()
+
 
 # read in beta dispersion
 beta.disp = read.csv("//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/BetaDisp/ECA_BetaDisp_10_Samp_Only.csv",stringsAsFactors = F)
@@ -89,31 +145,37 @@ merged.data = merge(merged.data,beta.disp,by = 'Site',all = T)
 merged.data = merge(merged.data,moist.sum,by = 'Site',all = T)
 dim(merged.data)
 
-## merge bnti with only moisture to maximize number of sites, but need at least 8 samples to stay
+## merge bnti with only moisture to maximize number of sites, but need at least the min sample
 bnti.moist = merge(x = bnti,y = moist.sum,by = 'Site'); 
-bnti.moist = bnti.moist[which(bnti.moist$Sample_Number >=8),]
+bnti.moist = bnti.moist[which(bnti.moist$Sample_Number >= min.num.samples),]
 dim(bnti.moist)
 
 # start trying constraint based regression
-!! need to run through a loop of different number of break points and record the p.val and r.sq for each and make a plot of those parameters vs. number of break points
+#!! need to run through a loop of different number of break points and record the p.val and r.sq for each and make a plot of those parameters vs. number of break points
 num.of.breaks = 10
-step.size = (max(bnti.moist$Med_Dry_Moist) - min(bnti.moist$Med_Dry_Moist))/num.of.breaks
-start.val = min(bnti.moist$Med_Dry_Moist)
+
+pdf(paste(out.dir,"MCD_Med_bNTI_v_Both_Moisture.pdf",sep=""),width=15)
+par(pty="s",mfrow=c(1,2))
+
+# do moisture on dry basis first
+moist.var = "Med_Dry_Moist"
+step.size = (max(bnti.moist[,moist.var]) - min(bnti.moist[,moist.var]))/num.of.breaks
+start.val = min(bnti.moist[,moist.var])
 end.val = start.val + step.size
 parsed.bnti = numeric()
 
 for (i in 1:(num.of.breaks + 1)) {
   
-  bnti.temp = bnti.moist[which(bnti.moist$Med_Dry_Moist >= start.val & bnti.moist$Med_Dry_Moist < end.val),]
+  bnti.temp = bnti.moist[which(bnti.moist[,moist.var] >= start.val & bnti.moist[,moist.var] < end.val),]
   if(nrow(bnti.temp) > 1) {
     max.val = max(bnti.temp$Median_bNTI)
-    moist.val = bnti.temp$Med_Dry_Moist[which.max(bnti.temp$Median_bNTI)]
+    moist.val = bnti.temp[which.max(bnti.temp$Median_bNTI),moist.var]
     site.temp = bnti.temp$Site[which.max(bnti.temp$Median_bNTI)]
   }
   
   if(nrow(bnti.temp) == 1) {
     max.val = bnti.temp$Median_bNTI
-    moist.val = bnti.temp$Med_Dry_Moist
+    moist.val = bnti.temp[,moist.var]
     site.temp = bnti.temp$Site
   }
   
@@ -129,39 +191,85 @@ for (i in 1:(num.of.breaks + 1)) {
   end.val = start.val + step.size
   
 }
-colnames(parsed.bnti) = c("Site","max.bnti","dry.moisture")
+colnames(parsed.bnti) = c("Site","max.bnti","moisture")
 parsed.bnti = as.data.frame(parsed.bnti)
 parsed.bnti$Site = as.character(parsed.bnti$Site)
 parsed.bnti$max.bnti = as.numeric(as.character(parsed.bnti$max.bnti))
-parsed.bnti$dry.moisture = as.numeric(as.character(parsed.bnti$dry.moisture))
+parsed.bnti$moisture = as.numeric(as.character(parsed.bnti$moisture))
 parsed.bnti = parsed.bnti[-which(is.na(parsed.bnti$max.bnti)),]
 dim(parsed.bnti)
 
-pdf(paste(out.dir,"MCD_Med_bNTI_v_Dry_Moisture.pdf",sep=""))
-par(pty="s")
-plot((bnti.moist$Median_bNTI) ~ (bnti.moist$Med_Dry_Moist),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per dry mass)",cex.lab=2,cex.axis=1.5)
-mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$dry.moisture
+
+plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per dry mass)",cex.lab=2,cex.axis=1.5)
+mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$moisture
 points(mod.to.plot,pch=19,col=4)
-mod = summary(lm(mod.to.plot))
-#abline(mod,lwd=2,col=4)
+mod.lm = summary(lm(mod.to.plot))
+abline(mod.lm,lwd=2,col=4)
+p.val = round(mod.lm$coefficients[2,4],digits = 2)
+r.sq = round(mod.lm$r.squared,digits = 2)
+mtext(text = paste("p = ",p.val," ",sep=""),line = -1.5,adj = 1,side = 3,cex=1.5)
+mtext(text = substitute(paste(R^2," = ", r.sq," "), list(r.sq=r.sq)),line = -3,adj = 1,side = 3,cex=1.5)
+mtext(text = " a",side = 3,line = -1.5,adj = 0,cex=2)
 
-# using above plot to select samples
-nmr.sites = c("ECA2_0055","ECA2_0041","ECA2_0017","ECA2_0005","ECA2_0009") # these fit a good regression of bNTI vs. moisture
-nmr.dat = merged.data[which(merged.data$Site %in% nmr.sites),] # they all have high NPOC and have 10 samples
-nmr.plot = parsed.bnti[which(parsed.bnti$Site %in% nmr.sites),]
-points(nmr.plot$max.bnti ~ nmr.plot$dry.moisture,col=2,cex=1.5)
 
-gc.dat = merged.data[which(merged.data$Site %in% parsed.bnti$Site),] # same sites for metaT
-dim(gc.dat)
-sum(gc.dat$Sample_Number)
+# do moisture on wet basis
+moist.var = "Med_Wet_Moist"
+step.size = (max(bnti.moist[,moist.var]) - min(bnti.moist[,moist.var]))/num.of.breaks
+start.val = min(bnti.moist[,moist.var])
+end.val = start.val + step.size
+parsed.bnti = numeric()
 
-metaP.sites = c("ECA2_0055","ECA2_0009")
-metaP.plot = parsed.bnti[which(parsed.bnti$Site %in% metaP.sites),]
-points(metaP.plot$max.bnti ~ metaP.plot$dry.moisture,col=3,cex=2,pch=2)
+for (i in 1:(num.of.breaks + 1)) {
+  
+  bnti.temp = bnti.moist[which(bnti.moist[,moist.var] >= start.val & bnti.moist[,moist.var] < end.val),]
+  if(nrow(bnti.temp) > 1) {
+    max.val = max(bnti.temp$Median_bNTI)
+    moist.val = bnti.temp[which.max(bnti.temp$Median_bNTI),moist.var]
+    site.temp = bnti.temp$Site[which.max(bnti.temp$Median_bNTI)]
+  }
+  
+  if(nrow(bnti.temp) == 1) {
+    max.val = bnti.temp$Median_bNTI
+    moist.val = bnti.temp[,moist.var]
+    site.temp = bnti.temp$Site
+  }
+  
+  if(nrow(bnti.temp) == 0) {
+    max.val = NA
+    moist.val = NA
+    site.temp = NA
+  }
+  
+  parsed.bnti = rbind(parsed.bnti,c(site.temp,max.val,moist.val))
+  
+  start.val = end.val
+  end.val = start.val + step.size
+  
+}
+colnames(parsed.bnti) = c("Site","max.bnti","moisture")
+parsed.bnti = as.data.frame(parsed.bnti)
+parsed.bnti$Site = as.character(parsed.bnti$Site)
+parsed.bnti$max.bnti = as.numeric(as.character(parsed.bnti$max.bnti))
+parsed.bnti$moisture = as.numeric(as.character(parsed.bnti$moisture))
+parsed.bnti = parsed.bnti[-which(is.na(parsed.bnti$max.bnti)),]
+dim(parsed.bnti)
 
-legend(x = 200,y = 34.5,legend = c("GC-MS and metaT","NMR","metaP"),col = c(4,2,3),pch = c(19,1,2),cex = 1.5,bty = "n")
+
+plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per wet mass)",cex.lab=2,cex.axis=1.5)
+mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$moisture
+points(mod.to.plot,pch=19,col=4)
+mod.lm = summary(lm(mod.to.plot))
+#abline(mod.lm,lwd=2,col=4)
+p.val = round(mod.lm$coefficients[2,4],digits = 2)
+r.sq = round(mod.lm$r.squared,digits = 2)
+mtext(text = paste("p = ",p.val," ",sep=""),line = -1.5,adj = 1,side = 3,cex=1.5)
+mtext(text = substitute(paste(R^2," = ", r.sq," "), list(r.sq=r.sq)),line = -3,adj = 1,side = 3,cex=1.5)
+mtext(text = " b",side = 3,line = -1.5,adj = 0,cex=2)
 
 dev.off()
+
+!! next step is making the histogram of the median values, code just below, just need to make sure it's good
+
 
 # make bnti histogram
 pdf("//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_bNTI_Outcomes/bNTI_MCD_Histogram.pdf")
