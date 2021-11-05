@@ -37,8 +37,8 @@ in.dir =  "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Processed
 out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Dendrograms/"
 poor.cal.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Formularity_output/"
 
-data = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Data.csv")), row.names = 1) # load in data file with samples
-mol = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Mol.csv")), row.names = 1) # Load in molecular data
+data = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Clean_Data.csv")), row.names = 1) # load in data file with samples
+mol = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Clean_Mol.csv")), row.names = 1) # Load in molecular data
 
 # Fixing column names if they begin with numbers
 if(length(grep("^X", colnames(data))) > 0){

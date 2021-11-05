@@ -8,7 +8,7 @@
 rm(list=ls());graphics.off()
 
 use.local = T # switch to use local or share drive. T indicates using local
-range = 401:999 # number of randomizations
+range = 1:999 # number of randomizations
 Sample_Name = "Dataset_Name"
 tree_type = "MCD" # MCD or TW or TWCD
 
@@ -34,7 +34,7 @@ if (use.local == T) {
 }
 
 unique.sites = substr(list.files(path = in.dir,pattern = "Data.csv"),start = 1,stop = 9)
-unique.sites = unique.sites[-grep(pattern = "_DI_",x = unique.sites)]
+#unique.sites = unique.sites[-grep(pattern = "_DI_",x = unique.sites)]
 
 for (curr.site in unique.sites) {
 
