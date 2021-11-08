@@ -40,8 +40,8 @@ out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/BetaDisp/
 poor.cal.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Formularity_output/"
 
 # Processed ICR Data
-data = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Data.csv")), row.names = 1)
-mol = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Mol.csv")), row.names = 1)
+data = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Clean_Data.csv")), row.names = 1)
+mol = read.csv(paste0(in.dir,list.files(path = in.dir,pattern = "*Clean_Mol.csv")), row.names = 1)
 
 samples = colnames(data)[-1]
 samples.site = substr(samples,1,9)
@@ -119,17 +119,18 @@ for (i in unique.sites) {
   
 }
 
-beta.disp.use = samples.per.site[which(x = samples.per.site$Num.of.Samples == 10),]
+beta.disp.use = samples.per.site[which(x = samples.per.site$Num.of.Samples > 0),]
 
-write.csv(beta.disp.use,paste0(out.dir,"ECA_BetaDisp_10_Samp_Only.csv"),quote = F,row.names = F)
+write.csv(beta.disp.use,paste0(out.dir,"ECA2_FTICR_BetaDisp.csv"),quote = F,row.names = F)
 
-sites.to.use = c( # these are the 4 sites to use, selected to evenly span the range of betadisp
-beta.disp.use$Site[which.min(beta.disp.use$betadisp)],
-beta.disp.use$Site[which.max(beta.disp.use$betadisp)],
-beta.disp.use$Site[which.min(abs(beta.disp.use$betadisp - (min(beta.disp.use$betadisp) + (max(beta.disp.use$betadisp) - min(beta.disp.use$betadisp))/3)))],
-beta.disp.use$Site[which.min(abs(beta.disp.use$betadisp - (min(beta.disp.use$betadisp) + 2*(max(beta.disp.use$betadisp) - min(beta.disp.use$betadisp))/3)))])
+# not sure what the goal of this was
+#sites.to.use = c( # these are the 4 sites to use, selected to evenly span the range of betadisp
+#beta.disp.use$Site[which.min(beta.disp.use$betadisp)],
+#beta.disp.use$Site[which.max(beta.disp.use$betadisp)],
+#beta.disp.use$Site[which.min(abs(beta.disp.use$betadisp - (min(beta.disp.use$betadisp) + (max(beta.disp.use$betadisp) - min(beta.disp.use$betadisp))/3)))],
+#beta.disp.use$Site[which.min(abs(beta.disp.use$betadisp - (min(beta.disp.use$betadisp) + 2*(max(beta.disp.use$betadisp) - min(beta.disp.use$betadisp))/3)))])
 
-hist(beta.disp.use$betadisp)
-abline(v=c(beta.disp.use$betadisp[which(beta.disp.use$Site %in% sites.to.use)]),col=2)
+#hist(beta.disp.use$betadisp)
+#abline(v=c(beta.disp.use$betadisp[which(beta.disp.use$Site %in% sites.to.use)]),col=2)
 
   
