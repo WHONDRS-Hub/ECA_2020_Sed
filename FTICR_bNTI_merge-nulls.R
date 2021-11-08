@@ -24,8 +24,8 @@ acomb = function(...) abind(..., along = 3)
 #### Data Loading ####
 # ################## #
 
-in.dir =  "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Dendrograms/"
-rand.in.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Randomizations/"
+in.dir =  "C:/Users/steg815/OneDrive - PNNL/Desktop/Temp_bNTI/MCD_Dendrograms/"
+rand.in.dir = "C:/Users/steg815/OneDrive - PNNL/Desktop/Temp_bNTI/MCD_Randomizations/"
 out.dir = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_bNTI_Outcomes/"
 
 unique.sites = substr(list.files(path = in.dir,pattern = "Data.csv"),start = 1,stop = 9)
@@ -147,6 +147,8 @@ for (curr.site in unique.sites) {
     r.sq,
     slope
   ))
+  
+  print(curr.site)
   
 }
 
