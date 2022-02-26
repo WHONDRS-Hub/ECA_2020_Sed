@@ -18,6 +18,28 @@ bnti.in.path = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null
 
 bnti.files = list.files(path = bnti.in.path,pattern = "MCD_bNTI_999")
 
+# generate list of sites that are used
+
+sites.used = numeric()
+
+for (i in bnti.files) {
+  
+  bnti.temp = read.csv(file = paste0(bnti.in.path,i),row.names = 1) 
+  
+  if (nrow(bnti.temp) >= min.num.samples) {
+    
+    sites.used = c(sites.used,substr(x = i,start = 1,stop = 9))
+      
+    }
+
+}
+
+sites.used = as.data.frame(sites.used)
+colnames(sites.used) = "ECA_Site"
+head(sites.used)
+
+write.csv(sites.used,paste0(out.dir,"ECA2_Sites_Used.csv"),row.names = F,quote = F)
+
 # compile bnti values across all sites to enable a density function
 
 bnti.comp = numeric()
