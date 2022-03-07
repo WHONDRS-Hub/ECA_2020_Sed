@@ -1,6 +1,7 @@
 rm(list=ls())
 
 library(crayon)
+library(picante)
 
 background.color = "#d9d9d9" #to set background of plots
 data.color = "#abd9e9" # to set color for data like bars in histogram
@@ -16,7 +17,11 @@ out.dir = "//PNL/Projects/ECA_Project/ECA_Manuscripts/OM_Null_Modeling/"
 
 bnti.in.path = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_bNTI_Outcomes/"
 
+dendro.in.path = "//PNL/Projects/ECA_Project/ECA_Sediment_Extraction_ICR_Data/Null_Modeling/MCD_Dendrograms/"
+
 bnti.files = list.files(path = bnti.in.path,pattern = "MCD_bNTI_999")
+
+dendro.files = list.files(path = dendro.in.path,pattern = "MCD_UPGMA.tre")
 
 # generate list of sites that are used
 
@@ -150,6 +155,33 @@ for (i in bnti.files) {
 }
 
 dev.off()
+
+# make a plot with two panels for the main ms. 
+# each panel has a dendrogram for the site with minimum bnti and maximum bnti (9 and 41)
+# label a and b
+
+pdf(paste0(out.dir,"SI_Min_Max_Dendros.pdf"),width=15)
+par(mfrow=c(1,2),pty="s",mar=c(1, 0.1, 0.1, 1))
+panel.label = "a "
+
+for (i in dendro.files) {
+  
+  if (substr(x = i,start = 8,stop = 9) %in% c('09','41')) {
+    
+    cat(red("Note that the min and max median sites are hard coded here, check to make sure the correct sites are called"))
+    dendro.temp = read.tree(file = paste0(dendro.in.path,i))
+    plot.phylo(dendro.temp,type = "fan",show.tip.label = F)
+    box()
+    mtext(text = panel.label,side = 3,line = -1.5,adj = 1,cex=2)
+    panel.label = "b "
+    
+  } 
+  
+}
+
+dev.off()
+
+
 
 
 # read in beta dispersion
