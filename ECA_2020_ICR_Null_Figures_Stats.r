@@ -6,7 +6,7 @@ library(picante)
 background.color = "#d9d9d9" #to set background of plots
 data.color = "#abd9e9" # to set color for data like bars in histogram
 sig.lines.color = "#d73027" # to set color for vertical lines in plots
-kern.den.color = "#fee090"  # to set color for kernal density lines
+kern.den.color = "#5e3c99"  # to set color for kernal density lines
 reg.dat.color = "#4575b4" # to set color for points in regressions
 
 # combine data to generate figures for manuscript on MCD null modeling of FTICR data from ECA 2020 campaign
@@ -105,10 +105,10 @@ for (i in bnti.files) {
     abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
     par(new=T,pty="s")
     hist(as.numeric(as.vector(as.dist(bnti.temp))),xlim=c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.lab=2,cex.axis=1.5,main=paste0("Site ",substr(x = i,start = 8,stop = 9)),xlab=expression(paste(beta,"NTI")),ylab="Within-Site Observations",col=data.color)
-    abline(v=c(-2,2),lwd=2,col=sig.lines.color,lty=2)
+    abline(v=c(-2,2),lwd=3,col=sig.lines.color,lty=2)
     axis(side = 1, at = c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.axis=1.5)
     par(new = TRUE) 
-    plot(bnti.comp.den,axes=F,lwd=3,col=kern.den.color,xlab="",ylab="",main="")
+    plot(bnti.comp.den,axes=F,lwd=4,col=kern.den.color,xlab="",ylab="",main="")
     box()
     axis(side = 4, at = pretty(range(bnti.comp.den$y)),cex.axis=1.5)      # Add second axis
     mtext("Among Site Density", side = 4, line = 3,cex=2) 
@@ -139,10 +139,10 @@ for (i in bnti.files) {
     abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
     par(new=T,pty="s")
     hist(as.numeric(as.vector(as.dist(bnti.temp))),xlim=c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.lab=2,cex.axis=1.5,main=paste0("Site ",substr(x = i,start = 8,stop = 9)),xlab=expression(paste(beta,"NTI")),ylab="Within-Site Observations",col=data.color)
-    abline(v=c(-2,2),lwd=2,col=sig.lines.color,lty=2)
+    abline(v=c(-2,2),lwd=3,col=sig.lines.color,lty=2)
     axis(side = 1, at = c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.axis=1.5)
     par(new = TRUE) 
-    plot(bnti.comp.den,axes=F,lwd=3,col=kern.den.color,xlab="",ylab="",main="")
+    plot(bnti.comp.den,axes=F,lwd=4,col=kern.den.color,xlab="",ylab="",main="")
     box()
     axis(side = 4, at = pretty(range(bnti.comp.den$y)),cex.axis=1.5)      # Add second axis
     mtext("Among Site Density", side = 4, line = 3,cex=2) 
@@ -239,16 +239,21 @@ merged.data = merge(bnti,texture,by = 'Site',all = T)
 #merged.data = merge(merged.data,npoc,by = 'Site',all = T)
 merged.data = merge(merged.data,beta.disp,by = 'Site',all = T)
 merged.data = merge(merged.data,moist.sum,by = 'Site',all = T)
+
+# trim to only sites used (based on min number of samples)
+merged.data = merged.data[which(merged.data$Site %in% sites.used$ECA_Site),]
 dim(merged.data)
 
 ## merge bnti with only moisture to maximize number of sites, but need at least the min sample
 bnti.moist = merge(x = bnti,y = moist.sum,by = 'Site'); 
-bnti.moist = bnti.moist[which(bnti.moist$Sample_Number >= min.num.samples),]
+bnti.moist = bnti.moist[which(bnti.moist$Site %in% sites.used$ECA_Site),]
 dim(bnti.moist)
 
-# start trying constraint based regression
+#########
+# do constraint based regression and make the plot
 num.of.breaks = 10
 
+# initiate the plot, but do the computation within here
 pdf(paste(out.dir,"Main_Med_bNTI_v_Both_Moisture.pdf",sep=""),width=15)
 par(pty="s",mfrow=c(1,2))
 
@@ -297,14 +302,14 @@ dim(parsed.bnti)
 
 plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per dry mass)",cex.lab=2,cex.axis=1.5)
 mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$moisture
-points(mod.to.plot,pch=19,col=reg.dat.color)
+points(mod.to.plot,pch=19,col=1)
 mod.lm = summary(lm(mod.to.plot))
-abline(mod.lm,lwd=2,col=reg.dat.color)
+abline(mod.lm,lwd=2,col=1)
 p.val = round(mod.lm$coefficients[2,4],digits = 2)
 r.sq = round(mod.lm$r.squared,digits = 2)
 mtext(text = paste("p = ",p.val," ",sep=""),line = -1.5,adj = 1,side = 3,cex=1.5)
 mtext(text = substitute(paste(R^2," = ", r.sq," "), list(r.sq=r.sq)),line = -3,adj = 1,side = 3,cex=1.5)
-mtext(text = "   a",side = 3,line = -1.5,adj = 0,cex=2)
+mtext(text = " a",side = 1,line = -1.5,adj = 0,cex=2)
 
 
 # do moisture on wet basis
@@ -352,16 +357,19 @@ dim(parsed.bnti)
 
 plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per wet mass)",cex.lab=2,cex.axis=1.5)
 mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$moisture
-points(mod.to.plot,pch=19,col=reg.dat.color)
+points(mod.to.plot,pch=19,col=1)
 mod.lm = summary(lm(mod.to.plot))
-#abline(mod.lm,lwd=2,col=reg.dat.color)
+#abline(mod.lm,lwd=2,col=1)
 p.val = round(mod.lm$coefficients[2,4],digits = 2)
 r.sq = round(mod.lm$r.squared,digits = 2)
 mtext(text = paste("p = ",p.val," ",sep=""),line = -1.5,adj = 1,side = 3,cex=1.5)
 mtext(text = substitute(paste(R^2," = ", r.sq," "), list(r.sq=r.sq)),line = -3,adj = 1,side = 3,cex=1.5)
-mtext(text = " b",side = 3,line = -1.5,adj = 0,cex=2)
+mtext(text = " b",side = 1,line = -1.5,adj = 0,cex=2)
 
 dev.off()
+# end constraint-based regression
+#############
+
 
 ######
 # make histogram of bnti median values
@@ -371,32 +379,44 @@ pdf(paste(out.dir,"Main_Hist_of_Med_bNTI.pdf",sep=""),width = 15)
   abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
   par(new=T,pty="s")
   hist(merged.data$Median_bNTI,xlim=c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),xlab=expression(paste("Within Site Median ",beta,"NTI",sep="")),cex.lab=2,cex.axis=1.5,main="",col = data.color)
-  abline(v=c(-2,2),lwd=2,col=sig.lines.color,lty=2)
+  abline(v=c(-2,2),lwd=3,col=sig.lines.color,lty=2)
   axis(side = 1, at = c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.axis=1.5)
   box()
 dev.off()
 #######
 
+#####
+# make histogram with density function overlaid for moisture across all samples and for the distribution of median moisture
+moisture.used = moisture[which(moisture$Site %in% sites.used$ECA_Site),]
+dim(moisture.used) # should be 380
+length(unique(moisture.used$Site)) # should be 38
 
-#############################
-haven't edited below here
+pdf(paste(out.dir,"SI_Moisture_Dists.pdf"),width=15)
 
-# selecting NMR samples. going for sets with high NPOC, but without losing main range in bNTI
-# median of 40 didn't drop the overall range in bNTI
-hist(merged.data$Median_bNTI[which(merged.data$Med.NPOC > 40)])
+  par(pty="s",mfrow=c(1,2))
+  
+  hist(bnti.moist$Med_Dry_Moist,cex.lab=2,cex.axis=1.5,main="",xlab="Sediment Moisture (per dry mass)",ylab="Within-Site Observations",xlim=c(0,ceiling(max(moisture.used$percent_water_content_dry))))
+  abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
+  par(new=T,pty="s")
+  hist(bnti.moist$Med_Dry_Moist,cex.lab=2,cex.axis=1.5,xlab="Sediment Moisture (per dry mass)",ylab="Within-Site Observations",col=data.color,main="",xlim=c(0,ceiling(max(moisture.used$percent_water_content_dry))))
+  par(new = TRUE) 
+  plot(density(moisture.used$percent_water_content_dry),axes=F,lwd=4,col=kern.den.color,xlab="",ylab="",main="")
+  box()
+  axis(side = 4, at = pretty(range(density(moisture.used$percent_water_content_dry)$y)),cex.axis=1.5)      # Add second axis
+  mtext("Among Site Density", side = 4, line = 3,cex=2) 
+  mtext(text = "a ",side = 3,line = -1.5,adj = 1,cex=2)
+  
+  hist(bnti.moist$Med_Wet_Moist,cex.lab=2,cex.axis=1.5,main="",xlab="Sediment Moisture (per wet mass)",ylab="Within-Site Observations",xlim=c(0,100))
+  abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
+  par(new=T,pty="s")
+  hist(bnti.moist$Med_Wet_Moist,cex.lab=2,cex.axis=1.5,xlab="Sediment Moisture (per wet mass)",ylab="Within-Site Observations",col=data.color,main="",xlim=c(0,100))
+  par(new = TRUE) 
+  plot(density(moisture.used$percent_water_content_wet),axes=F,lwd=4,col=kern.den.color,xlab="",ylab="",main="")
+  box()
+  axis(side = 4, at = pretty(range(density(moisture.used$percent_water_content_wet)$y)),cex.axis=1.5)      # Add second axis
+  mtext("Among Site Density", side = 4, line = 3,cex=2) 
+  mtext(text = "b ",side = 3,line = -1.5,adj = 1,cex=2)
 
-trim.dat = merged.data[which(merged.data$Med.NPOC > 40),]
-hist(trim.dat$Median_bNTI)
-nmr.sites = c('ECA2_0009','ECA2_0061','ECA2_0049','ECA2_0041','ECA2_0055') # took min, max, and evenly spaced in between
-abline(v = c(trim.dat$Median_bNTI[which(trim.dat$Site %in% nmr.sites)]),col=2)
+dev.off()
 
-# selecting GC-MS samples. using the NMR samples and adding more
-# dropping the lowest NPOC sets
-hist(merged.data$Median_bNTI[which(merged.data$Med.NPOC > 10)])
-gc.trim.dat = merged.data[which(merged.data$Med.NPOC > 10),]
-gc.sites = c('ECA2_0009','ECA2_0061','ECA2_0049','ECA2_0041','ECA2_0055','ECA2_0056','ECA2_0002','ECA2_0001','ECA2_0047','ECA2_0036','ECA2_0043','ECA2_0028','ECA2_0013')
-abline(v = c(gc.trim.dat$Median_bNTI[which(gc.trim.dat$Site %in% gc.sites)]),col=2)
-
-# metaT sites are the same as for GC-MS
-# metaP sites are the min and max for median bNTI ECA2_0009 and ECA2_0055
-
+####
