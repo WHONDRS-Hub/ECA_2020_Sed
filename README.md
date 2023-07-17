@@ -1,5 +1,18 @@
-# ECA_2020_Sed
+##  Organic Molecules are Deterministically Assembled across River Corridor 
 
+### General Description
+
+This GitHub repository is associated with the publication "Organic Molecules are Deterministically Assembled across River Corridor” by Stegen et al., (2023).
+
+The study applies community ecology methods to dissolved organic matter (DOM) chemistry from variably inundated riverbed sediments to uncover principles governing DOM composition at a reach-scale. This work uses publicly available data from the Worldwide Hydrobiogeochemical Observation Network for Dynamic River Systems (WHONDRS).
+
+Variable Inundated Sediment extracts were analyzed using ultrahigh resolution Fourier transform ion cyclotron resonance mass spectrometry (FTICR-MS) as part of the WHONDRS [Perturbation Response Traits Campaign](https://www.pnnl.gov/projects/WHONDRS/perturbation-response-traits). 
+
+The data from the 38 river corridors used in this manuscript were part of a WHONDRS study. The raw, unprocessed FTICR-MS data, sediment moisture, water fraction and other additional data can be found in the [ESS-DIVE repository](https://data.ess-dive.lbl.gov/view/doi:10.15485/1824222) for this campaign. Processed FTICR-MS data used in this manuscript was processed following instructions provided in the data package. This repository contains the R scripts used to generate the main figures in the manuscript as well as the version of data used for analyses, downloaded in June 2021. Any reuse of the data should cite Garayburu-Caruso et al. (2021), as follows:
+
+Garayburu-Caruso V A ; Goldman A E ; Chu R ; Danczak R E ; McCall M L ; McKever S A ; Renteria L ; Tolic N ; Torgeson J M ; Toyoda J G ; Stegen J C ; WHONDRS Consortium T (2021): FTICR, NPOC, TN, and Moisture of Variably Inundated Sediment across 48 North American Rivers. Early Career Research Program: Watershed Perturbation-Response Traits Derived Through Ecological Theory - Worldwide Hydrobiogeochemistry Observation Network for Dynamic River Systems (WHONDRS), ESS-DIVE repository. Dataset. doi:10.15485/1834208 accessed via https://data.ess-dive.lbl.gov/datasets/doi:10.15485/1834208 on 2023-07-17
+
+### File Descriptions
 The files ECA2_FTICR_BetaDisp.csv and VGC_texture.csv need to be in the repository for a piece of the code to run, but the contents are not used for any analysis associated with the manuscript.
 
 The file merged_weights.csv contains moisture content data in the format used by the scripts, which deviates from the format used on the ESS-DIVE data package. It is read in by the scripts below.

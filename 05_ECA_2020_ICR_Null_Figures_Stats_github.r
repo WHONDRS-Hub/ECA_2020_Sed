@@ -292,7 +292,7 @@ parsed.bnti = parsed.bnti[-which(is.na(parsed.bnti$max.bnti)),]
 dim(parsed.bnti)
 
 
-plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per dry mass)",cex.lab=2,cex.axis=1.5)
+plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Sediment Moisture",cex.lab=2,cex.axis=1.5)
 mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$moisture
 points(mod.to.plot,pch=19,col=1)
 mod.lm = summary(lm(mod.to.plot))
@@ -347,7 +347,7 @@ parsed.bnti = parsed.bnti[-which(is.na(parsed.bnti$max.bnti)),]
 dim(parsed.bnti)
 
 
-plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Moisture (per wet mass)",cex.lab=2,cex.axis=1.5)
+plot((bnti.moist$Median_bNTI) ~ (bnti.moist[,moist.var]),ylab=expression(paste("Site-Level Median ",beta,"NTI",sep="")),xlab="Site-Level Median Water Fraction",cex.lab=2,cex.axis=1.5)
 mod.to.plot = parsed.bnti$max.bnti ~ parsed.bnti$moisture
 points(mod.to.plot,pch=19,col=1)
 mod.lm = summary(lm(mod.to.plot))
@@ -387,10 +387,10 @@ pdf(paste(out.dir,"SI_Moisture_Dists.pdf"),width=15)
 
   par(pty="s",mfrow=c(1,2))
   
-  hist(bnti.moist$Med_Dry_Moist,cex.lab=2,cex.axis=1.5,main="",xlab="Sediment Moisture (per dry mass)",ylab="Within-Site Observations",xlim=c(0,ceiling(max(moisture.used$percent_water_content_dry))))
+  hist(bnti.moist$Med_Dry_Moist,cex.lab=2,cex.axis=1.5,main="",xlab="Sediment Moisture",ylab="Within-Site Observations",xlim=c(0,ceiling(max(moisture.used$percent_water_content_dry))))
   abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
   par(new=T,pty="s")
-  hist(bnti.moist$Med_Dry_Moist,cex.lab=2,cex.axis=1.5,xlab="Sediment Moisture (per dry mass)",ylab="Within-Site Observations",col=data.color,main="",xlim=c(0,ceiling(max(moisture.used$percent_water_content_dry))))
+  hist(bnti.moist$Med_Dry_Moist,cex.lab=2,cex.axis=1.5,xlab="Sediment Moisture",ylab="Within-Site Observations",col=data.color,main="",xlim=c(0,ceiling(max(moisture.used$percent_water_content_dry))))
   par(new = TRUE) 
   plot(density(moisture.used$percent_water_content_dry),axes=F,lwd=4,col=kern.den.color,xlab="",ylab="",main="")
   box()
@@ -398,10 +398,10 @@ pdf(paste(out.dir,"SI_Moisture_Dists.pdf"),width=15)
   mtext("Among Site Density", side = 4, line = 3,cex=2) 
   mtext(text = "a ",side = 3,line = -1.5,adj = 1,cex=2)
   
-  hist(bnti.moist$Med_Wet_Moist,cex.lab=2,cex.axis=1.5,main="",xlab="Sediment Moisture (per wet mass)",ylab="Within-Site Observations",xlim=c(0,100))
+  hist(bnti.moist$Med_Wet_Moist,cex.lab=2,cex.axis=1.5,main="",xlab="Water Fraction",ylab="Within-Site Observations",xlim=c(0,100))
   abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
   par(new=T,pty="s")
-  hist(bnti.moist$Med_Wet_Moist,cex.lab=2,cex.axis=1.5,xlab="Sediment Moisture (per wet mass)",ylab="Within-Site Observations",col=data.color,main="",xlim=c(0,100))
+  hist(bnti.moist$Med_Wet_Moist,cex.lab=2,cex.axis=1.5,xlab="Water Fraction",ylab="Within-Site Observations",col=data.color,main="",xlim=c(0,100))
   par(new = TRUE) 
   plot(density(moisture.used$percent_water_content_wet),axes=F,lwd=4,col=kern.den.color,xlab="",ylab="",main="")
   box()
