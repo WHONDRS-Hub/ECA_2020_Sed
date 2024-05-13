@@ -109,7 +109,7 @@ if(summary == T){
   
   classes = as.data.frame(classes)
   
-  write.csv(classes, paste(Sample_Name, "_Compound_Class_Summary.csv", sep = ""), quote = F)
+  write.csv(classes, paste(Sample_Name, "_Compound_Class_Summary.csv", sep = ""), quote = F) # this file was not written out for this data package because it wasn't used in any subsequent analyses or figures
   
   
   #### Elemental Composition Summary
@@ -136,7 +136,7 @@ if(summary == T){
   
   elem.comp = as.data.frame(elem.comp)
   
-  write.csv(elem.comp, paste(Sample_Name, "_Elemental_Composition_Summary.csv", sep = ""), quote = F)
+  write.csv(elem.comp, paste(Sample_Name, "_Elemental_Composition_Summary.csv", sep = ""), quote = F) # this file was not written out for this data package because it wasn't used in any subsequent analyses or figures
   
   
   #### Characteristics summary
@@ -257,6 +257,6 @@ if(summary == T){
     
   } # I'm not sure how to do this without the for-loop, but I'm simply just finding the mean/median for peak stats
   
-  write.csv(characteristics, paste(Sample_Name, "_MolInfo_Summary.csv", sep = ""), quote = F)
+  write.csv(characteristics, paste(Sample_Name, "_MolInfo_Summary.csv", sep = ""), quote = F) # this file was not written out for this data package because it wasn't used in any subsequent analyses or figures
   
 }
