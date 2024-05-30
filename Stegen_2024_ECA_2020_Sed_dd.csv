@@ -1,0 +1,86 @@
+Column_or_Row_Name,Unit,Definition,Missing_Value_Codes
+AI,N/A,Aromaticity index calculated as per Koch and Dittmar; 2006; 2015.,N/A; -9999; NA
+AI_Mod,N/A,Modified aromaticity index calculated as per Koch and Dittmar; 2006; 2016.,N/A; -9999; NA
+betadisp,N/A,Variation in dissimilarity (beta dispersion).,N/A; -9999; NA
+bMNTD_Jacc_pval,N/A,Regression p-value for relationship between beta mean nearest taxon distance (bMNTD) and Jaccard distances.,N/A; -9999; NA
+bMNTD_Jacc_Rsq,N/A,Regression R-squared value for relationship between beta mean nearest taxon distance (bMNTD) and Jaccard distances.,N/A; -9999; NA
+bMNTD_Jacc_Slope,N/A,Regression slope value for relationship between beta mean nearest taxon distance (bMNTD) and Jaccard distances.,N/A; -9999; NA
+bs1_class,N/A,Boundaries used to assign compound classes to molecular formula. Boundary sets 1 are Van Krevelen-based (Kim et al.; 2003 & Bailey et al.; 2017).,N/A; -9999; NA
+bs2_class,N/A,Boundaries used to assign compound classes to molecular formula. Boundary sets 2 are Van Krevelen-based (Kim et al.; 2003 & Bailey et al.; 2017).,N/A; -9999; NA
+bs3_class,N/A,Boundaries used to assign compound classes to molecular formula. Boundary sets  3 further integrate stoichiometry to assign modified compound classes (Rivas-Urbach et al.; 2018).,N/A; -9999; NA
+C,N/A,Carbon atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+C13,N/A,Isotopic atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+Candidates,N/A,Number of possible known molecules the analyzed molecule could be. Assigned by checking against a known database. Value of -1 when molecule was not checked against database.,N/A; -9999; NA
+Class,N/A,Inferred chemical classes as per Kim et al.; 2003.,N/A; -9999; NA
+Column_or_Row_Name,N/A,Column or row headers from each csv file in the dataset.,N/A; -9999; NA
+Date_time.x,MM/DD/YY HH:mm,The date and time when the wet weight was recorded.,N/A; -9999; NA
+Date_time.y,MM/DD/YY HH:mm,The date and time when the dry weight was recorded.,N/A; -9999; NA
+DBE,N/A,Double bond equivalent or degree of unsaturation calculated as per Koch and Dittmar; 2006; 2017.,N/A; -9999; NA
+DBE_AI,N/A,The minimum number of C-C double bonds plus rings in a common molecular structure containing heteroatoms. Calculated as per Koch and Dittmar; 2006; 2018.,N/A; -9999; NA
+DBE_O,N/A,Double bond equivalent minus Oxygen calculated as per Koch and Dittmar; 2006; 2018.,N/A; -9999; NA
+Definition,N/A,Description of the information in a given column or row in the dataset.,N/A; -9999; NA
+delGcox0PerCmol,kilojoules_per_Carbon_mol,Gibbs free energy of the carbon oxidation half reaction under standard conditions (pH = 0). Calculated as  per LaRowe and Van Cappellen; 2011.,N/A; -9999; NA
+delGcoxPerCmol,kilojoules_per_Carbon_mol,Gibbs free energy of the carbon oxidation half reaction at pH 7. Calculated as per Song et al.; 2020.,N/A; -9999; NA
+delGd,kilojoules_per_Compound_mol,Gibbs free energy of the carbon oxidation half reaction per compound mol at pH 7. Calculated as per Song et al.; 2020.,N/A; -9999; NA
+delGd0,kilojoules_per_Compound_mol,Gibbs free energy of the carbon oxidation half reaction per compound mol at pH 0. Calculated as per Song et al.; 2020.,N/A; -9999; NA
+distinct,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+ECA_Site,N/A,"Unique identifier (e.g. ECA2_0001) for each of the sites included in this study. The following headers are all synonyms: ""Site""; ""ECA_Site""; ""Kit_ID"".",N/A; -9999; NA
+ECA2_*,N/A,"Sample ID in which the asterisk indicates the Sample_ID in the format ""[Kit_ID]_[rep number]_[ion accumulation time (IAT)]"" (e.g. ECA2_0001_01.a_p15). See the flmd file for details pertaining to column contents.",N/A; -9999; NA
+ECA2_DI_Day*,N/A,"Deionized (DI) water blanks for Fourier transform ion cyclotron resonance mass spectrometry (FTICR-MS) with rows representing peak intensities reflected as presence absence. The asterisk indicates the Sample_ID in the format ""ECA2_DI_Day[day of extraction].[replicate number]_[ion accumulation time (IAT)]"" (e.g. ECA2_Day1.1_p1).",N/A; -9999; NA
+El_comp,N/A,Assigned elemental group(s) that are known.,N/A; -9999; NA
+Error_ppm,parts_per_million,Parts per million error calculated as [expected molecular mass - measured molecular mass]/expected molecular mass * 1e6).,N/A; -9999; NA
+File_Description,N/A,A brief description of the files in the data package.,N/A; -9999; NA
+File_Name,N/A,Name of files in the data package.,N/A; -9999; NA
+File_Path,N/A,File path within the data package.,N/A; -9999; NA
+final,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+GFE,kilojoules_per_Carbon_mol,Gibbs free energy of the carbon oxidation half reaction under standard conditions. Calculated as per LaRowe and Van Cappellen; 2011.,N/A; -9999; NA
+H,N/A,Hydrogen atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+Hom_Selection,N/A,Site-level estimate of the fractional influence of homogeneous selection assembly processes.,N/A; -9999; NA
+HtoC_ratio,N/A,Hydrogen to carbon ratio.,N/A; -9999; NA
+ID_scanned,N/A,Unique identifier (e.g. ECA2_0001_01_SM) for a given sample.,N/A; -9999; NA
+kdefect.CH2,N/A,Kendrick Defect = Nominal Kendrick Mass - Kendrick Mass; Hughey et al.; 2001.,N/A; -9999; NA
+Kit_ID,N/A,"Unique identifier (e.g. ECA2_0001). The following headers are all synonyms: ""Site""; ""ECA_Site""; ""Kit_ID"".",N/A; -9999; NA
+kmass.CH2,N/A,(IUPACmass)(14/14.01565); where IUPAC mass is based on the 12C atomic mass as exactly 12 Da. Hughey et al.; 2001.,N/A; -9999; NA
+Kurt_bNTI,N/A,The kurtosis value of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+lamO2,N/A,Thermodynamic efficiency (defined by lambda) at pH 7. Calculated as per Song et al.; 2020.,N/A; -9999; NA
+lamO20,N/A,Thermodynamic efficiency (defined by lambda) at standard state (pH = 0). Calculated as per Song et al.; 2020.,N/A; -9999; NA
+Mass,mass_to_charge_ratio,Measured ionic mass. The units of mass to charge ration is commonly denoted as m/z.,N/A; -9999; NA
+Max_bNTI,N/A,Maximum value of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+Mean_bNTI,N/A,Mean value of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+Median_bNTI,N/A,Median value of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+Min_bNTI,N/A,Minimum value of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+Missing_Value_Codes,N/A,Cells with missing data are represented with a missing value code rather than an empty cell. This column describes which missing value codes were used.,N/A; -9999; NA
+MolForm,N/A,Molecular Formula.,N/A; -9999; NA
+N,N/A,Nitrogen atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+Na,N/A,Sodium atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+NeutralMass,N/A,Zero-charge or neutral molecular mass. Calculated from observed ionic mass by balancing charge with protons or electrons).,N/A; -9999; NA
+NOSC,N/A,Nominal Oxidation State of Carbon calculated as per Koch and Dittmar; 2006; 2018.,N/A; -9999; NA
+NtoC_ratio,N/A,Nitrogen to Carbon ratio.,N/A; -9999; NA
+NtoP_ratio,N/A,Nitrogen to Phosphorous ratio.,N/A; -9999; NA
+Num.of.Samples,count,Number of samples.,N/A; -9999; NA
+O,N/A,Oxygen atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+OtoC_ratio,N/A,Oxygen to Carbon ratio.,N/A; -9999; NA
+P,N/A,Phosphorous atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+percent_water_content_dry,percent,"The percentage of water content relative to dry mass. This column is synonymous with the column header ""00495_percent_water_content_per_dry_mass"" from the file ""ECA2_NPOC_TN_Moisture.csv"" in the published data package available on ESS-DIVE at doi:10.15485/1834208. ",N/A; -9999; NA
+percent_water_content_wet,percent,"The percentage of water content relative to wet mass. This column is synonymous with the column header ""70320_percent_water_content_per_wet_mass"" from the file ""ECA2_NPOC_TN_Moisture.csv"" in the published data package available on ESS-DIVE at doi:10.15485/1834208. ",N/A; -9999; NA
+points,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+Process_Tot_Check,N/A,Check to ensure that the ecological process estimation was performed correctly via script. Value of 1 indicates proper performance.,N/A; -9999; NA
+PtoC_ratio,N/A,Phosphorus to Carbon ratio.,N/A; -9999; NA
+r.squared,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+remaining,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+removed,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+S,N/A,Sulphur atoms in the analyzed molecule. Identified by an algorithm in Kujawinski and Behn 2006 and modified as described in Tfaily et al.; 2017.,N/A; -9999; NA
+Sample_Number,count,Number of samples for a given site that have Fourier transform ion cyclotron resonance mass spectrometry (FTICR-MS) data.,N/A; -9999; NA
+samples,N/A,This column is empty in this data set because there were no poorly calibrated samples.,N/A; -9999; NA
+SD_bNTI,N/A,Standard deviation of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+Site,N/A,"Unique identifier (e.g. ECA2_0001). The following headers are all synonyms: ""Site""; ""ECA_Site""; ""Kit_ID"".",N/A; -9999; NA
+Skew_bNTI,N/A,The skewness of the beta nearest taxon index (bNTI).,N/A; -9999; NA
+Standard,N/A,ESS-DIVE Reporting Format or other standard applied to the data file.,N/A; -9999; NA
+Stochasticity,N/A,Site-level estimate of the fractional influence of stochastic assembly processes.,N/A; -9999; NA
+Texture,N/A,"Categorical texture for each Kit_ID (categories include ""Fine"" or ""Course"").",N/A; -9999; NA
+true_dry_weight_g,grams,The actual sediment weight when dry.,N/A; -9999; NA
+true_wet_weight_g,grams,The actual sediment weight when wet.,N/A; -9999; NA
+Unit,N/A,Unit of measurement that applies to a given column in the data package.,N/A; -9999; NA
+Var_Selection,N/A,Site-level estimate of the fractional influence of variable selection assembly processes.,N/A; -9999; NA
+Weight_dry_g,grams,The sediment weight when dry.,N/A; -9999; NA
+Wet_weight_g_tube.without.cap,grams,The weight of the tube without the cap when it is wet.,N/A; -9999; NA
