@@ -365,7 +365,12 @@ dev.off()
 
 ######
 # make histogram of bnti median values
-pdf(paste(out.dir,"Main_Hist_of_Med_bNTI.pdf",sep=""),width = 15)
+pdf(paste(out.dir,"Main_Hist_of_Med_bNTI_revised.pdf",sep=""),width = 15)
+# Min and Max Median bnti values for Danczak papers
+max.hja = 13.3321
+max.nat = 1.935
+min.hja = 3.955
+min.nat = -3.795
   par(pty="s",mfrow=c(1,2))
   hist(merged.data$Median_bNTI,xlim=c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),xlab=expression(paste("Within Site Median ",beta,"NTI",sep="")),cex.lab=2,cex.axis=1.5,main="")
   abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
@@ -374,6 +379,9 @@ pdf(paste(out.dir,"Main_Hist_of_Med_bNTI.pdf",sep=""),width = 15)
   abline(v=c(-2,2),lwd=3,col=sig.lines.color,lty=2)
   axis(side = 1, at = c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.axis=1.5)
   box()
+  abline(v = c(max.hja, min.hja), lwd = 2, col = "purple")  
+  abline(v = c(max.nat, min.nat), lwd = 2, col = "blue", lty = 2) 
+  
 dev.off()
 #######
 
