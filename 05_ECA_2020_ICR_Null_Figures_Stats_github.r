@@ -376,11 +376,12 @@ min.nat = -3.795
   abline(v=floor(min(bnti.comp)),lwd=8000,col=background.color)
   par(new=T,pty="s")
   hist(merged.data$Median_bNTI,xlim=c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),xlab=expression(paste("Within Site Median ",beta,"NTI",sep="")),cex.lab=2,cex.axis=1.5,main="",col = data.color)
-  abline(v=c(-2,2),lwd=3,col=sig.lines.color,lty=2)
   axis(side = 1, at = c(floor(min(bnti.comp)),ceiling(max(bnti.comp))),cex.axis=1.5)
   box()
-  abline(v = c(max.hja, min.hja), lwd = 2, col = "purple")  
-  abline(v = c(max.nat, min.nat), lwd = 2, col = "blue", lty = 2) 
+  abline(v = c(max.hja, min.hja), lwd = 3, col = "darkcyan")  
+  abline(v = c(max.nat, min.nat), lwd = 3, col = "darkblue") 
+  abline(v=c(-2,2),lwd=4,col=sig.lines.color,lty=2)
+  
   
 dev.off()
 #######
